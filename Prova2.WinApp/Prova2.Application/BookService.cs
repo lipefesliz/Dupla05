@@ -1,6 +1,6 @@
 ﻿using Prova2.Domain;
 using Prova2.Infra.Data;
-using Prova2.Infra;
+using Prova2.Infra.PDF;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,15 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data;
 
 namespace Prova2.Applications
 {
     public class BookService
     {
         public BookDAO _bookDAO = new BookDAO();
-
-        public Report _bookReport = new Report();
+        public BookReport _bookReport = new BookReport();
 
         public BookService()
         {
@@ -34,8 +32,8 @@ namespace Prova2.Applications
             }
             catch (Exception e)
             {
+                MessageBox.Show(e.Message);
                 book.Ex = true;
-                throw new Exception(e.Message);
             }
 
             return book;
@@ -52,10 +50,9 @@ namespace Prova2.Applications
             }
             catch (Exception e)
             {
+                MessageBox.Show(e.Message);
                 book.Ex = true;
-                throw new Exception(e.Message);
             }
-
 
             return book;
         }
@@ -96,30 +93,30 @@ namespace Prova2.Applications
             }
         }
 
-        public void BookPdfCreator(string FileName)
+        public bool BookPdfCreator()
         {
-            IList<Book> list = GetAllBooks();
+            // Displays an OpenFileDialog so the user can select a Cursor.  
+            SaveFileDialog saveFile = new SaveFileDialog();
+            saveFile.Filter = "Pdf File|*.pdf";
+            saveFile.Title = "Save your PDF File";
+            saveFile.ShowDialog();
+
+            var list = GetAllBooks();
             string items = "";
 
             foreach (var item in list)
             {
-                items += "\n";
                 items += "Título: " + item.Title + "\n";
                 items += "Tema: " + item.Theme + "\n";
                 items += "Autor: " + item.Autor + "\n";
+                items += "\n";
             }
 
-            if (FileName != "")
+            if (saveFile.FileName != "")
             {
-                try
-                {
-                    _bookReport.GeneratePdf(FileName, items);
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.Message);
-                }
+                _bookReport.GeneratePdf(saveFile.FileName, items);
             }
+            return true;
         }
     }
 }

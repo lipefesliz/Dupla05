@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BookService.cs" />
-    <Compile Include="LoanService.cs" />
+    <Compile Include="OrderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,9 +54,9 @@
       <Project>{88E38EB7-9B3C-43E4-B9BA-CC7EBC6B114A}</Project>
       <Name>Prova2.Infra.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Prova2.Infra.PDF\Prova2.Infra.csproj">
+    <ProjectReference Include="..\Prova2.Infra.PDF\Prova2.Infra.PDF.csproj">
       <Project>{A5DC18BB-CB19-4D8B-8DC6-1E57CA54B75F}</Project>
-      <Name>Prova2.Infra</Name>
+      <Name>Prova2.Infra.PDF</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

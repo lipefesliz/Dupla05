@@ -116,9 +116,7 @@ namespace ProjetoLoterica.Aplicação.Teste.Features.Concursos
                 .Returns(new List<Concurso> { new Concurso { Id = 1 }, new Concurso { Id = 2 } });
 
             var concursos = _concursoService.GetAllConcursosFechados();
-            var desktop = System.Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
-            string caminho = System.IO.Path.Combine(desktop,"Test.csv");
+            string caminho = "testeCSV.csv";
             _concursoService.GerarCsv(concursos, caminho);
 
             File.Exists(caminho).Should().BeTrue();

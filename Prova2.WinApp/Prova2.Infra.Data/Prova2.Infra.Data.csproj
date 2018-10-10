@@ -41,18 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Book\BookDAO.cs" />
-    <Compile Include="Loan\LoanDAO.cs" />
+    <Compile Include="BookDAO.cs" />
+    <Compile Include="OrderDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Prova2.Domain\Prova2.Domain.csproj">
       <Project>{79D88ED6-0431-4D6A-9C6F-01266353335A}</Project>
       <Name>Prova2.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Prova2.Infra.PDF\Prova2.Infra.csproj">
-      <Project>{a5dc18bb-cb19-4d8b-8dc6-1e57ca54b75f}</Project>
-      <Name>Prova2.Infra</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

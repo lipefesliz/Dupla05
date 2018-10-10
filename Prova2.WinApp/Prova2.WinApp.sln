@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Infrastructure", "4. Inf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prova2.Infra.Data", "Prova2.Infra.Data\Prova2.Infra.Data.csproj", "{88E38EB7-9B3C-43E4-B9BA-CC7EBC6B114A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prova2.Infra", "Prova2.Infra.PDF\Prova2.Infra.csproj", "{A5DC18BB-CB19-4D8B-8DC6-1E57CA54B75F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prova2.Infra.PDF", "Prova2.Infra.PDF\Prova2.Infra.PDF.csproj", "{A5DC18BB-CB19-4D8B-8DC6-1E57CA54B75F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

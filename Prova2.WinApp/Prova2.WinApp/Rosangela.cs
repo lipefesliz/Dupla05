@@ -1,6 +1,13 @@
 ﻿using Prova2.Applications;
 using Prova2.Domain;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Prova2.WinApp
@@ -13,15 +20,15 @@ namespace Prova2.WinApp
 
             ClearFields();
             ListBooks();
-            ListLoans();
+            ListOrders();
         }
 
         private Book _book = new Book();
         private Book _bookSelected = new Book();
         private BookService _bookService = new BookService();
 
-        private Loan _loan = new Loan();
-        private LoanService _loanService = new LoanService();
+        private Order _order = new Order();
+        private OrderService _orderService = new OrderService();
 
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -78,11 +85,11 @@ namespace Prova2.WinApp
             _book.DatePublication = dtpDatePublication.Value;
         }
 
-        private void FormLoanToObject()
+        private void FormOrderToObject()
         {
-            _loan.Customer = txtCustomer.Text;
-            _loan.Book = _bookSelected;
-            _loan.ReturnDate = dtpReturnDate.Value;
+            _order.Customer = txtCustomer.Text;
+            _order.Book = _bookSelected;
+            _order.ReturnDate = dtpReturnDate.Value;
         }
 
         private void ClearFields()
@@ -98,12 +105,12 @@ namespace Prova2.WinApp
             dtpReturnDate.Value = DateTime.Now;
             cbIsAvailable.Checked = false;
 
-            _loan = new Loan();
+            _order = new Order();
             txtCustomer.Clear();
             cmbBooks.SelectedIndex = -1;
             //numQty.ResetText();
 
-            ListLoans();
+            ListOrders();
             ListBooks();
         }
 
@@ -115,6 +122,14 @@ namespace Prova2.WinApp
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void lbBooks_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _book = lbBooks.SelectedItem as Book;
+
+            btnDelete.Enabled = true;
+            btnEdit.Enabled = true;
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -129,40 +144,56 @@ namespace Prova2.WinApp
             dtpDatePublication.Value = _book.DatePublication;
         }
 
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (_book != null)
+            {
+                var message = MessageBox.Show("Deseja excluir o produto " + _book.Title + "?", "Atenção",
+                    MessageBoxButtons.YesNo);
+
+                if (message == DialogResult.Yes)
+                {
+                    _bookService.DeleteBook(_book);
+
+                    ListBooks();
+                    ClearFields();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Selecione um produto para excluir!");
+            }
+
+            DisableButtons();
+        }
+
         private void ListBooks()
         {
             lbBooks.Items.Clear();
             cmbBooks.Items.Clear();
 
-            try
-            {
-                var list = _bookService.GetAllBooks();
-
-                foreach (var item in list)
-                {
-                    lbBooks.Items.Add(item);
-
-                    if (item.IsAvailable)
-                    {
-                        cmbBooks.Items.Add(item);
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Não foi possível obter a lista de Livros");
-            }
-        }
-
-        private void ListLoans()
-        {
-            lbLoans.Items.Clear();
-
-            var list = _loanService.GetAllLoans();
+            var list = _bookService.GetAllBooks();
 
             foreach (var item in list)
             {
-                lbLoans.Items.Add(item);
+                lbBooks.Items.Add(item);
+
+                if (item.IsAvailable)
+                {
+                    cmbBooks.Items.Add(item);
+                }
+            }
+        }
+
+        private void ListOrders()
+        {
+            lbOrders.Items.Clear();
+
+            var list = _orderService.GetAllOrders();
+
+            foreach (var item in list)
+            {
+                lbOrders.Items.Add(item);
             }
         }
 
@@ -171,22 +202,22 @@ namespace Prova2.WinApp
             _bookSelected = cmbBooks.SelectedItem as Book;
         }
 
-        private void btnSaveLoan_Click(object sender, EventArgs e)
+        private void btnSaveOrder_Click(object sender, EventArgs e)
         {
-            Loan obj = new Loan();
+            Order obj = new Order();
             try
             {
-                if (_loan.Id == 0)
+                if (_order.Id == 0)
                 {
-                    FormLoanToObject();
+                    FormOrderToObject();
 
-                    obj = _loanService.AddLoan(_loan);
+                    obj = _orderService.AddOrder(_order);
                 }
                 else
                 {
-                    FormLoanToObject();
+                    FormOrderToObject();
 
-                    _loanService.UpdateLoan(_loan);
+                    _orderService.UpdateOrder(_order);
                 }
             }
             catch (Exception ex)
@@ -205,152 +236,83 @@ namespace Prova2.WinApp
             }
         }
 
-        private void btnClearLoans_Click(object sender, EventArgs e)
+        private void btnClearOrders_Click(object sender, EventArgs e)
         {
             ClearFields();
             DisableButtons();
         }
 
-        private void btnEditLoan_Click(object sender, EventArgs e)
+        private void btnEditOrder_Click(object sender, EventArgs e)
         {
-            txtCustomer.Text = _loan.Customer;
+            txtCustomer.Text = _order.Customer;
 
-            dtpReturnDate.Value = _loan.ReturnDate;
+            dtpReturnDate.Value = _order.ReturnDate;
 
-            cmbBooks.SelectedItem = _loan.Book;
+            cmbBooks.SelectedItem = _order.Book;
 
-            ListLoans();
+            ListOrders();
 
             DisableButtons();
         }
 
-        private void lbLoans_SelectedIndexChanged(object sender, EventArgs e)
+        private void lbOrders_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _loan = lbLoans.SelectedItem as Loan;
+            _order = lbOrders.SelectedItem as Order;
 
-            txtCustomer.Text = _loan.Customer;
-            dtpReturnDate.Value = _loan.ReturnDate;
-            cmbBooks.SelectedItem = _loan.Book;
-
-            btnDeleteLoan.Enabled = true;
+            btnDeleteOrder.Enabled = true;
+            btnEditOrder.Enabled = true;
             btnTax.Enabled = true;
         }
 
-        private void btnDeleteLoan_Click(object sender, EventArgs e)
+        private void btnDeleteOrder_Click(object sender, EventArgs e)
         {
-            if (_loan != null)
+            if (_order != null)
             {
-                var message = MessageBox.Show("Deseja excluir o empréstimo " + _loan.Customer + "?", "Atenção",
+                var message = MessageBox.Show("Deseja excluir o empréstimo " + _order.Customer + "?", "Atenção",
                     MessageBoxButtons.YesNo);
 
                 if (message == DialogResult.Yes)
                 {
-                    _loanService.DeleteLoan(_loan);
+                    _orderService.DeleteOrder(_order);
+
+                    ListOrders();
+                    ClearFields();
+                    DisableButtons();
+                    
                 }
             }
             else
             {
                 MessageBox.Show("Selecione um empréstimo para excluir!");
             }
-
-            ClearFields();
-            DisableButtons();
         }
 
         private void DisableButtons()
         {
-            btnDeleteLoan.Enabled = false;
+            btnDeleteOrder.Enabled = false;
+            btnEditOrder.Enabled = false;
             btnTax.Enabled = false;
             btnDelete.Enabled = false;
+            btnEdit.Enabled = false;
         }
 
         private void btnTax_Click(object sender, EventArgs e)
         {
 
-            _loan.Tax = _loan.GetTax(_loan);
+            _order.Tax = _order.GetTax(_order);
 
-            MessageBox.Show("O lucro do produto selecionado é de: " + _loan.Tax);
+            MessageBox.Show("O lucro do produto selecionado é de: " + _order.Tax);
         }
 
-        private void btnReportLoan_Click(object sender, EventArgs e)
-        {
-            // Displays an OpenFileDialog so the user can select a Cursor.  
-            SaveFileDialog saveFile = new SaveFileDialog();
-            saveFile.Filter = "Pdf File|*.pdf";
-            saveFile.Title = "Save your PDF File";
-            saveFile.ShowDialog();
 
-            try
-            {
-                _loanService.LoanPdfCreator(saveFile.FileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+        private void btnReport_Click(object sender, EventArgs e)
+        {
+            _bookService.BookPdfCreator();
         }
 
-        private void lbBooks_SelectedIndexChanged_1(object sender, EventArgs e)
+        private void btnReportOrder_Click(object sender, EventArgs e)
         {
-            _book = lbBooks.SelectedItem as Book;
-
-            tabRosangela.SelectedIndex = 0;
-            txtId.Text = _book.Id.ToString();
-            txtTitle.Text = _book.Title;
-            txtTheme.Text = _book.Theme;
-            txtAutor.Text = _book.Autor;
-            txtVolume.Text = _book.Volume.ToString();
-            cbIsAvailable.Checked = _book.IsAvailable ? true : false;
-            dtpDatePublication.Value = _book.DatePublication;
-
-            btnDelete.Enabled = true;
-        }
-
-        private void btnReport_Click_1(object sender, EventArgs e)
-        {
-            // Displays an OpenFileDialog so the user can select a Cursor.  
-            SaveFileDialog saveFile = new SaveFileDialog();
-            saveFile.Filter = "Pdf File|*.pdf";
-            saveFile.Title = "Save your PDF File";
-            saveFile.ShowDialog();
-
-            try
-            {
-                _bookService.BookPdfCreator(saveFile.FileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void btnDelete_Click_1(object sender, EventArgs e)
-        {
-            if (_book != null)
-            {
-                var message = MessageBox.Show("Deseja excluir o livro " + _book.Title + "?", "Atenção",
-                    MessageBoxButtons.YesNo);
-
-                if (message == DialogResult.Yes)
-                {
-                    try
-                    {
-                        _bookService.DeleteBook(_book);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Não foi possível deletar o item selecionado, pois o livro consta no registro de Empréstimos.");
-                    }
-
-                }
-            }
-            else
-            {
-                MessageBox.Show("Selecione um produto para excluir!");
-            }
-
-            ClearFields();
-            DisableButtons();
+            _orderService.OrderPdfCreator();
         }
     }
 }

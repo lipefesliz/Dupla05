@@ -58,18 +58,14 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="dbo" />
-    <Folder Include="dbo\Tables\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\TBApostas.sql" />
+    <Build Include="dbo\TBApostas.sql" />
+    <Build Include="dbo\TBApostas_Dezenas.sql" />
+    <Build Include="dbo\TBConcursos.sql" />
+    <Build Include="dbo\TBConcursos_Dezenas.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DBLoteria.refactorlog" />
-  </ItemGroup>
-  <ItemGroup>
-    <Build Include="dbo\Tables\TBApostas_Dezenas.sql" />
-    <Build Include="dbo\Tables\TBBoloes.sql" />
-    <Build Include="dbo\Tables\TBConcursos.sql" />
-    <Build Include="dbo\Tables\TBConcursos_Dezenas.sql" />
   </ItemGroup>
 </Project>

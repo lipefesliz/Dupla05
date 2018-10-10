@@ -104,9 +104,7 @@ namespace ProjetoLoterica.Integration.Teste.Features.Concursos
             var concursos = _concursoService.GetAllConcursosFechados();
             concursos.Add(concurso);
 
-            var desktop = System.Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
-            string caminho = System.IO.Path.Combine(desktop, "Test.csv");
+            string caminho = "integracao.csv";
             _concursoService.GerarCsv(concursos, caminho);
 
             File.Exists(caminho).Should().BeTrue();
